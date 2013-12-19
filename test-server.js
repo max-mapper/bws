@@ -3,9 +3,12 @@ var server = require('http').createServer(ecstatic(__dirname))
 var uuid = require('hat')
 var WebSocketServer = require('ws').Server
 var websocketStream = require('websocket-stream')
-var through = require('through')
+var through = require('through2')
 var mbs = require('multibuffer-stream')
+var headStream = require('head-stream')
 var stdout = require('stdout')
+var multiplex = require('multiplex')
+var fs = require('fs')
 var wss = new WebSocketServer({ noServer: true })
 
 var binarySockets = {}
@@ -14,7 +17,22 @@ server.on('upgrade', function(req, socket, head) {
   wss.handleUpgrade(req, socket, head, function(conn) {
     var stream = websocketStream(conn)
     var packStream = mbs.packStream()
-
+    var plexer = multiplex(function(stream, id) {
+      var hs = headStream(onHead)
+      stream.pipe(hs)
+      function onHead(buff, next) {
+        var filename = 'uploads/' + buff.toString()
+        var progress = through(function(c, e, d) {
+          console.log(filename, c.length); this.push(c); d()
+        }, function(n) {
+          console.log(filename, 'done'); n();
+        })
+        var writeStream = fs.createWriteStream(filename)
+        hs.pipe(progress).pipe(writeStream)
+        next()
+      }
+    })
+    
     packStream.pipe(stream)
     
     var id = uuid();
@@ -27,9 +45,7 @@ server.on('upgrade', function(req, socket, head) {
       delete binarySockets[id];
     }
     
-    stream.pipe(stdout())
-    
-    packStream.write(new Buffer('hello world'))
+    stream.pipe(plexer)    
   })
 })
 

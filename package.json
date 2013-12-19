@@ -9,14 +9,17 @@
   "author": "max ogden",
   "license": "BSD 2-Clause",
   "dependencies": {
-    "multibuffer-stream": "maxogden/multibuffer-stream#no-bops",
+    "multibuffer-stream": "~2.1.0",
     "stdout": "maxogden/node-stdout#client-side",
-    "through2": "~0.2.3"
+    "through2": "~0.2.3",
+    "multiplex": "~0.0.2",
+    "head-stream": "~0.0.2"
   },
   "devDependencies": {
     "ecstatic": "~0.4.13",
     "browserify": "~3.4.1",
-    "fileliststream": "0.0.2"
+    "fileliststream": "maxogden/fileliststream#chunks",
+    "head-stream": "~0.0.2"
   },
   "repository": {
     "type": "git",

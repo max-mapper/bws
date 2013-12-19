@@ -1,7 +1,9 @@
 var bws = require('./')
 var stdout = require('stdout')
+var multiplex = require('multiplex')
+var plexer = multiplex()
 var socket = bws(onReady)
-bws().pipe(stdout())
+plexer.pipe(bws()).pipe(stdout())
 
 function onReady() {
   var FileListStream = require('fileliststream')
@@ -25,9 +27,13 @@ function onReady() {
     event.stopPropagation()
     event.preventDefault()
 
-    var fileList = FileListStream(event.dataTransfer.files)
+    var fileList = FileListStream(event.dataTransfer.files, {output: 'arraybuffer'})
 
-    fileList.files[0].pipe(socket)
+    fileList.files.map(function(file) {
+      var writeStream = plexer.createStream()
+      writeStream.write(new Buffer(file.name))
+      file.pipe(writeStream)
+    })
 
     return false
   })
