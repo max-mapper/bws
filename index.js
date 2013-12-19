@@ -2,7 +2,6 @@ var websocketStream = require('websocket-stream')
 var mbs = require('multibuffer-stream')
 var through = require('through')
 var combiner = require('stream-combiner')
-var bops = require('bops')
 
 module.exports = function(socketAddr, onReady) {
   if (typeof socketAddr === 'function') {
