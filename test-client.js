@@ -27,7 +27,7 @@ function onReady() {
     event.stopPropagation()
     event.preventDefault()
 
-    var fileList = FileListStream(event.dataTransfer.files, {output: 'arraybuffer'})
+    var fileList = FileListStream(event.dataTransfer.files, {output: 'arraybuffer', chunkSize: 32768})
 
     fileList.files.map(function(file) {
       var writeStream = plexer.createStream()
