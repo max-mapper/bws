@@ -1,12 +1,12 @@
 var bws = require('./')
 var stdout = require('stdout')
 var multiplex = require('multiplex')
+var FileListStream = require('fileliststream')
 var plexer = multiplex()
 var socket = bws(onReady)
 plexer.pipe(bws()).pipe(stdout())
 
 function onReady() {
-  var FileListStream = require('fileliststream')
   var body = document.body
 
   function noop(event) {

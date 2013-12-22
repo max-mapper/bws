@@ -15,15 +15,14 @@
     "websocket-stream": "~0.4.0"
   },
   "devDependencies": {
-    "stdout": "maxogden/node-stdout#client-side",
+    "stdout": "~0.0.2",
     "through2": "~0.2.3",
     "multiplex": "~0.0.2",
-    "filereader-stream": "0.0.1",
-    "hat": "0.0.3",
+    "hat": "~0.0.3",
     "ws": "~0.4.31",
     "ecstatic": "~0.4.13",
     "browserify": "~3.4.1",
-    "fileliststream": "maxogden/fileliststream#chunks",
+    "fileliststream": "~0.0.3",
     "head-stream": "~0.0.2"
   },
   "repository": {
