@@ -4,7 +4,6 @@ var uuid = require('hat')
 var WebSocketServer = require('ws').Server
 var websocketStream = require('websocket-stream')
 var through = require('through2')
-var mbs = require('multibuffer-stream')
 var headStream = require('head-stream')
 var stdout = require('stdout')
 var multiplex = require('multiplex')
@@ -16,7 +15,6 @@ var binarySockets = {}
 server.on('upgrade', function(req, socket, head) {
   wss.handleUpgrade(req, socket, head, function(conn) {
     var stream = websocketStream(conn)
-    var packStream = mbs.packStream()
     var plexer = multiplex(function(stream, id) {
       var hs = headStream(onHead)
       stream.pipe(hs)
@@ -33,10 +31,8 @@ server.on('upgrade', function(req, socket, head) {
       }
     })
     
-    packStream.pipe(stream)
-    
     var id = uuid();
-    binarySockets[id] = packStream;
+    binarySockets[id] = stream;
     
     stream.once('end', leave);
     stream.once('error', leave);
